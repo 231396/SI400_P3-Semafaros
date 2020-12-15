@@ -1,22 +1,13 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import util.JCircle;
 import util.MenuBar;
-
-import java.awt.Dimension;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ClientScreen extends JFrame {
 
@@ -24,7 +15,7 @@ public class ClientScreen extends JFrame {
 	
 	private JPanel contentPane;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

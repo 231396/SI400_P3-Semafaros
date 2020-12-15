@@ -5,53 +5,121 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
-import util.Commands;
+import server.CommandsServer;
+import util.*;
 
 public class MainClient {
-    private byte[] buf = new byte[256];
 
-    private DatagramSocket socket;
-    private InetAddress address;
+    private DatagramSocket socket;    
+    boolean running;    
     
+    private InetAddress serverAddress;
+    private int serverPort;
+    
+	private PacketReader pr = new PacketReader();
+	private PacketWriter pw = new PacketWriter();	
+	    
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		MainClient mainClient;
 		try {
-			mainClient = new MainClient();
-			System.out.println(mainClient.sendEcho(Commands.StartTrafficLight.getValue()));
-			mainClient.close();
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
+			MainClient mainClient = new MainClient(InetAddress.getByName("localhost"), 7777);
+			mainClient.sendPacket(CommandsClient.startRequest);
+			
+		} catch (Exception e1) {
 			e1.printStackTrace();
-		} catch (SocketException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
-	public MainClient() throws UnknownHostException, SocketException {
+
+	public MainClient(InetAddress serverAddress, int serverPort) throws SocketException {
         socket = new DatagramSocket();
-        address = InetAddress.getByName("localhost");
-    }
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
+        pw.setBuffer();
+    }	
+	
+	public boolean isServer(InetAddress address, int port) {
+		return this.serverAddress == address && this.serverPort == port;
+	}
 
-    public String sendEcho(String msg) throws IOException {
-    	byte[] buf_send = msg.getBytes();
-        DatagramPacket packet 
-          = new DatagramPacket(buf_send, buf_send.length, address, 4445);
-        socket.send(packet);
-        packet = new DatagramPacket(buf, buf.length);
-        socket.receive(packet);
-        String received = new String(
-        packet.getData(), 0, packet.getLength());
-        return received;
+    public void sendPacket(CommandsClient cc) throws IOException {
+    	pw.clear();
+    	pw.write(cc.toString());
+    	byte[] sendData = pw.toArray();
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
+		socket.send(sendPacket);
     }
+    
+	public void listen() {
+		running = true;		
+		byte[] buffer = new byte[pw.length()];
+		
+		while (running) {
+			try {
+				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+				
+				System.out.println(String.format("Waiting Data on port %d...", socket.getLocalPort()));
+				socket.receive(packet);
+				
+				pr.setBuffer(packet.getData());				
+				String received = pr.readString();
 
-    public void close() {
-        socket.close();
-    }
+				System.out.println("Recieved Data: " + received);
+				
+				try {					
+					CommandsServer cs = CommandsServer.valueOf(received);
+					Receive(cs, packet.getAddress(), packet.getPort());
+				} catch (Exception e) {					
+					System.out.println("Unknown command: " + received);
+				}
+				
+			} 
+			catch (IOException e) {
+				System.out.println("Error on data reading!");
+				e.printStackTrace();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		socket.close();
+	}
+	
+	private void Receive(CommandsServer cs, InetAddress address, int port) throws IOException {
+		if (!isServer(address, port)) {
+			System.out.println("Command from non-server");
+			return;
+		}
+		
+		switch (cs) {
+			case startResponse:
+				startTrafficLight();
+			break;
+			case setLightGreen:
+				upadateTrafficLight(TrafficLightStates.GREEN);
+			break;
+			case setLightYellow:
+				upadateTrafficLight(TrafficLightStates.YELLOW);
+			break;
+			case setLightRed:
+				upadateTrafficLight(TrafficLightStates.RED);
+			break;
+			case exit:
+				onServerExit();
+			break;
+		}
+	}
 
+	private void startTrafficLight() {
+		//TODO - Acender a luz inicial
+	}
+
+
+	private void upadateTrafficLight(TrafficLightStates state) {
+		//TODO - Trocar a cor
+	}
+	
+	private void onServerExit() {
+		//TODO - Desligar cliente
+	}
 }

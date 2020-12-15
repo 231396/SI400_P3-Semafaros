@@ -6,12 +6,12 @@ public class TrafficLight {
 	
 	private InetAddress address;
 	private int port;
-	private int state;
+	private TrafficLightStates state;
 	
 	public TrafficLight(InetAddress address,int port) {
 		this.address = address;
 		this.port = port;
-		state = TrafficLightStates.GREEN.getState();
+		state = TrafficLightStates.GREEN;
 	}
 
 	public InetAddress getAddress() {
@@ -22,14 +22,16 @@ public class TrafficLight {
 		return port;
 	}
 
-	public int getState() {
+	public TrafficLightStates getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(TrafficLightStates state) {
 		this.state = state;
 	}
-	
-	
+
+	public boolean sameAdress(InetAddress address, int port) {
+		return this.address == address && this.port == port;
+	}	
 
 }

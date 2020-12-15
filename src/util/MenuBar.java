@@ -36,17 +36,17 @@ public class MenuBar
 		
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ActionTxtOpenner("Credits.txt");				
+				TxtOpennerAction("Credits.txt");				
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ActionTxtOpenner("Disclaimer.txt");				
+				TxtOpennerAction("Disclaimer.txt");				
 			}
 		});		
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ActionTxtOpenner("Help.txt");				
+				TxtOpennerAction("Help.txt");				
 			}
 		});
 	}
@@ -55,7 +55,7 @@ public class MenuBar
 		System.out.println("quit");
 	}
 	
-	static void ActionTxtOpenner(String str) {
+	static void TxtOpennerAction(String str) {
 		System.out.println("open " + str);
 	}
 	
