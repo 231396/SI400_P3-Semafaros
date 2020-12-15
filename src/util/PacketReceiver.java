@@ -6,7 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class PacketReceiver implements Runnable, Closeable{
+public class PacketReceiver extends Thread implements Closeable{
 
     public interface onPacketReceivedListener{
     	public void onPacketReceived(DatagramPacket packet);

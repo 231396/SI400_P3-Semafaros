@@ -14,6 +14,7 @@ import util.PacketReceiver.onPacketReceivedListener;
 public class MainServer implements onPacketReceivedListener{
 
 	private DatagramSocket socket;
+	private PacketReceiver packetReceiver;
 
 
 	public static void main(String[] args) {
@@ -23,14 +24,26 @@ public class MainServer implements onPacketReceivedListener{
 			
 			int server_port = Integer.parseInt(args[0]);
 			
-			MainServer mainServer = new MainServer();
-			PacketReceiver packetReceiver = new PacketReceiver(mainServer,server_port);
-			Thread t = new Thread(packetReceiver);
-			t.start();
+			MainServer mainServer = new MainServer(server_port);
+			mainServer.startServer();
+			
 		} catch (SocketException e) {
 			System.out.println("Erro na inicialização do server!");
 			e.printStackTrace();
 		}
+	}
+	
+
+	public MainServer(int server_port) throws SocketException{
+		socket = new DatagramSocket();
+		packetReceiver = new PacketReceiver(this,server_port);
+	}
+	
+	public void startServer() {
+		packetReceiver.start();
+	}
+	public void stopServer() throws IOException {
+		packetReceiver.close();
 	}
 
 	@Override
@@ -72,8 +85,5 @@ public class MainServer implements onPacketReceivedListener{
 		}
 	}
 
-	public MainServer() throws SocketException{
-		socket = new DatagramSocket();
-	}
 
 }

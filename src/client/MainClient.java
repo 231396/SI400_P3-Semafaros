@@ -15,25 +15,37 @@ import util.PacketReceiver.onPacketReceivedListener;
 public class MainClient implements onPacketReceivedListener{
     private byte[] buf = new byte[256];
     
+    private PacketReceiver packetReceiver;
     private InetAddress address;
+    private int server_port; 
+    private DatagramSocket datagramSocket;
     
 	public static void main(String[] args) {
 		try {
 			int server_port = Integer.parseInt(args[0]);
 			int client_port = Integer.parseInt(args[1]);
 			
-			MainClient mainClient = new MainClient();
-			PacketReceiver packetReceiver = new PacketReceiver(mainClient,client_port);
-			Thread t = new Thread(packetReceiver);
-			t.start();
-			mainClient.sendStartCommand(packetReceiver.getSocket(),server_port);
+			MainClient mainClient = new MainClient(server_port, client_port);
+			mainClient.startClient();
 			
 		} catch (Exception e) {
 			//Implementar uma tratativa de erro valida aqui
 			System.out.println("Erro na inicialização do MainClient");
 		} 
 	}
+
+	public MainClient(int server_port,int client_port) throws UnknownHostException, SocketException {
+        address = InetAddress.getByName("localhost");
+        packetReceiver = new PacketReceiver(this,client_port);
+        this.server_port = server_port;
+        this.datagramSocket = packetReceiver.getSocket();
+    }
 	
+	public void startClient() throws IOException{
+		packetReceiver.start();
+		sendStartCommand();
+	}
+
 
 	@Override
 	public void onPacketReceived(DatagramPacket packet) {
@@ -43,15 +55,11 @@ public class MainClient implements onPacketReceivedListener{
 		
 	}
 	
-	public MainClient() throws UnknownHostException, SocketException {
-        address = InetAddress.getByName("localhost");
-    }
-
-    public void sendStartCommand(DatagramSocket socket, int server_port) throws IOException {
+    public void sendStartCommand() throws IOException {
     	byte[] buff_send = ByteConverter.intToByteArray(Commands.START.ordinal());
         DatagramPacket packet = new DatagramPacket(buff_send, buff_send.length, address, server_port);
         System.out.println("Comando enviado, porta do packet : "+packet.getPort());
-        socket.send(packet);
+        datagramSocket.send(packet);
     }
 
 }
