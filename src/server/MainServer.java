@@ -5,77 +5,75 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 
 import util.Commands;
+import util.PacketReceiver;
+import util.PacketReceiver.onPacketReceivedListener;
 
-public class MainServer extends Thread {
+public class MainServer implements onPacketReceivedListener{
 
 	private DatagramSocket socket;
-	private boolean running;
-	private byte[] buf = new byte[256];
+
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		MainServer mainServer;
+		
+		
 		try {
-			mainServer = new MainServer();
-			mainServer.start();
+			
+			int server_port = Integer.parseInt(args[0]);
+			
+			MainServer mainServer = new MainServer();
+			PacketReceiver packetReceiver = new PacketReceiver(mainServer,server_port);
+			Thread t = new Thread(packetReceiver);
+			t.start();
 		} catch (SocketException e) {
 			System.out.println("Erro na inicialização do server!");
 			e.printStackTrace();
 		}
 	}
 
-	public MainServer() throws SocketException {
-		socket = new DatagramSocket(4445);
+	@Override
+	public void onPacketReceived(DatagramPacket packet) {
+		
+		byte[] buff;
+		InetAddress address = packet.getAddress();
+		int port = packet.getPort();
+		
+		int commandReceived = ByteBuffer.wrap(packet.getData()).getInt();				
+
+		System.out.println("Comando recebido - port : "+port+" - address : "+address.toString());
+		
+		if (commandReceived == Commands.START.ordinal() ) {
+			System.out.println("Iniciando Semaforo !");
+			buff = "Semaforo iniciado!;".getBytes();
+			packet = new DatagramPacket(buff, buff.length, address, port);
+
+		} else if (commandReceived == Commands.UPDATE.ordinal()) {
+			System.out.println("Atualizando Semaforo !");
+			buff = "Atualizando Semaforo!;".getBytes();
+			packet = new DatagramPacket(buff, buff.length, address, port);
+
+		} else if (commandReceived == Commands.STOP.ordinal()) {
+			System.out.println("Finalizando Semaforo !");
+			buff = "Finalizando Semaforo!;".getBytes();
+			packet = new DatagramPacket(buff, buff.length, address, port);
+		}else {
+			System.out.println("Comando Invalido");
+			buff = "Comando Invalido".getBytes();
+			packet = new DatagramPacket(buff, buff.length, address, port);
+		}
+		
+		try {
+			socket.send(packet);
+		} catch (IOException e) {
+			//Implementar uma tratativa de erro valida aqui
+			System.out.println("Erro ao responder o comando do cliente");
+		}
 	}
 
-	public void run() {
-		running = true;
-
-		while (running) {
-			try {
-				DatagramPacket packet = new DatagramPacket(buf, buf.length);
-				System.out.println("Esperando dados!");
-
-				socket.receive(packet);
-
-				InetAddress address = packet.getAddress();
-				int port = packet.getPort();
-				packet = new DatagramPacket(buf, buf.length, address, port);
-				String received = new String(packet.getData(), 0, packet.getLength()).trim();
-				System.out.println("Dados recibidos : " + received);
-				
-				//System.out.println("|"+received+ "|"+ Commands.StartTrafficLight.getValue()+"|");
-
-				if (received.equals(Commands.StartTrafficLight.getValue())) {
-					System.out.println("Iniciando Semaforo ! ");
-					buf = "Semaforo iniciado!".getBytes();
-					packet = new DatagramPacket(buf, buf.length, address, port);
-
-				} else if (received.equals(Commands.UpdateTrafficLight.getValue())) {
-
-				} else if (received.equals(Commands.StopTrafficLight.getValue())) {
-					System.out.println("Finalizando Semaforo !;");
-					buf = "Semaforo iniciado!;".getBytes();
-					packet = new DatagramPacket(buf, buf.length, address, port);
-
-				}else {
-					
-				}
-
-				if (received.equals("end")) {
-					running = false;
-					continue;
-				}
-				socket.send(packet);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Erro na leitura ou envio dos dados!");
-				e.printStackTrace();
-			}
-		}
-		socket.close();
+	public MainServer() throws SocketException{
+		socket = new DatagramSocket();
 	}
 
 }
