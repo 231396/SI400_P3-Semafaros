@@ -1,4 +1,4 @@
-package util;
+package network_util;
 
 import java.nio.*;
 import java.nio.charset.StandardCharsets;

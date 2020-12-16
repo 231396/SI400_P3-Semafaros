@@ -5,22 +5,18 @@ import java.net.*;
 import java.util.ArrayList;
 
 import client.CommandsClient;
+import network_util.*;
 import util.*;
 
-public class MainServer {
+public class MainServer extends MainNetwork {
 
-	private DatagramSocket socket;
-	private boolean running;
-	
-	private PacketReader pr = new PacketReader();
-	private PacketWriter pw = new PacketWriter();	
-	
 	ArrayList<TrafficLight> clients = new ArrayList<>();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		try {
-			MainServer mainServer = new MainServer(7777);
-			mainServer.listen();
+			int server_port = 7777; //Integer.parseInt(args[0]);			
+			MainServer mainServer = new MainServer(server_port);
+			mainServer.startListening();
 		} catch (SocketException e) {
 			System.out.println("Erro na inicializacao do server!");
 			e.printStackTrace();
@@ -28,46 +24,18 @@ public class MainServer {
 	}
 
 	public MainServer(int port) throws SocketException {
-		socket = new DatagramSocket(port);
-		pw.setBuffer();
+		super(port);
 	}
 
-	public void listen() {
-		running = true;
-		
-		byte[] buffer = new byte[pw.length()];
-		
-		while (running) {
-			try {
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-				
-				System.out.println(String.format("Waiting Data on port %d...", socket.getLocalPort()));
-				socket.receive(packet);
-				
-				pr.setBuffer(packet.getData());				
-				String received = pr.readString();
-
-				System.out.println("Recieved Data: " + received);
-				
-				try {					
-					CommandsClient cc = CommandsClient.valueOf(received);
-					Receive(cc, packet.getAddress(), packet.getPort());
-				} catch (Exception e) {					
-					System.out.println("Unknown commands: " + received);
-				}				
-			} 
-			catch (IOException e) {
-				System.out.println("Error on data reading!");
-				e.printStackTrace();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+	@Override
+	public void listen(DatagramPacket packet, String received) {
+		try {					
+			CommandsClient cc = CommandsClient.valueOf(received);
+			Receive(cc, packet.getAddress(), packet.getPort());
+		} catch (Exception e) {					
+			System.out.println("Unknown commands: " + received);
 		}
-		
-		socket.close();
-	}
-	
+	}	
 	
 	// ----- SEND ----- //
 
@@ -91,7 +59,7 @@ public class MainServer {
 	
 	private void send(byte[] sendData, TrafficLight tl) throws IOException {
 		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, tl.getAddress(), tl.getPort());
-		socket.send(sendPacket);
+		nt.getSocket().send(sendPacket);
 	}
 	
 	// ----- RECEIVE ----- //
@@ -102,6 +70,7 @@ public class MainServer {
 			case startRequest:
 					client = new TrafficLight(address, port);
 					clients.add(client);
+					System.out.println("RECEBI DO CLIENTE");
 					sendSingle(CommandsServer.startResponse, client);
 				break;
 			case exit:
