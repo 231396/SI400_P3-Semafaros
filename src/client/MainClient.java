@@ -16,8 +16,8 @@ public class MainClient extends MainNetwork {
     
 	public static void main(String[] args) {
 		try {
-			InetAddress server_ip = InetAddress.getByName("localhost"); //Integer.parseInt(args[0]);
-			int server_port = 7777;//Integer.parseInt(args[1]);
+			InetAddress server_ip = InetAddress.getByName(args[0]);
+			int server_port = Integer.parseInt(args[1]);
 			
 			MainClient mainClient = new MainClient(server_ip, server_port);
 			mainClient.sendPacket(CommandsClient.startRequest);

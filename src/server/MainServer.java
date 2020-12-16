@@ -14,7 +14,7 @@ public class MainServer extends MainNetwork {
 	
 	public static void main(String[] args) {		
 		try {
-			int server_port = 7777; //Integer.parseInt(args[0]);			
+			int server_port = Integer.parseInt(args[0]);			
 			MainServer mainServer = new MainServer(server_port);
 			mainServer.startListening();
 		} catch (SocketException e) {
