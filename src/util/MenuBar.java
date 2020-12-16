@@ -2,14 +2,15 @@ package util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class MenuBar 
-{
+public class MenuBar {
 
 	public static void CreateMenuBar(JFrame f) {
 		JMenuBar menuBar = new JMenuBar();
@@ -19,45 +20,55 @@ public class MenuBar
 		JMenuItem mntmCredits = new JMenuItem("Credits");
 		JMenuItem mntmDisclaimer = new JMenuItem("Disclaimer");
 		JMenuItem mntmHelp = new JMenuItem("Help");
-		
-		f.setJMenuBar(menuBar);		
-		menuBar.add(mnFile);		
+
+		f.setJMenuBar(menuBar);
+		menuBar.add(mnFile);
 		mnFile.add(mntmQuit);
-		menuBar.add(mnHelp);		
-		mnHelp.add(mntmCredits);		
-		mnHelp.add(mntmDisclaimer);		
+		menuBar.add(mnHelp);
+		mnHelp.add(mntmCredits);
+		mnHelp.add(mntmDisclaimer);
 		mnHelp.add(mntmHelp);
-		
+
 		mntmQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				QuitAction();				
+				QuitAction();
 			}
 		});
-		
+
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("Credits.txt");				
+				TxtOpennerAction("..\\src\\resources\\Credits.txt");
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("Disclaimer.txt");				
+				TxtOpennerAction("..\\src\\resources\\Disclaimer.txt");
 			}
-		});		
+		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("Help.txt");				
+				TxtOpennerAction( "..\\src\\resources\\Help.txt" );
 			}
 		});
 	}
-	
+
 	static void QuitAction() {
-		System.out.println("quit");
+		
+		System.exit(0);
+		
+		
+		
+		
 	}
-	
+
 	static void TxtOpennerAction(String str) {
-		System.out.println("open " + str);
+
+		try {
+			java.awt.Desktop.getDesktop().open(new File(str));
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
-	
-	
+
 }
