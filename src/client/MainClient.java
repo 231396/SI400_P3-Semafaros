@@ -21,7 +21,7 @@ public class MainClient extends MainNetwork {
 			
 			MainClient mainClient = new MainClient(server_ip, server_port);
 			mainClient.sendPacket(CommandsClient.startRequest);
-			
+			mainClient.startListening();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -34,7 +34,7 @@ public class MainClient extends MainNetwork {
     }	
 	
 	public boolean isServer(InetAddress address, int port) {
-		return this.serverAddress == address && this.serverPort == port;
+		return this.serverAddress.equals(address) && this.serverPort == port;
 	}
 
     public void sendPacket(CommandsClient cc) throws IOException {
@@ -55,7 +55,9 @@ public class MainClient extends MainNetwork {
 		}
 	}
 	
-	private void receive(CommandsServer cs, InetAddress address, int port) throws IOException {
+	private void receive(CommandsServer cs, InetAddress address, int port) throws IOException {		
+		//System.out.println(address + " : " + serverAddress);
+		//System.out.println(port+ " : " + serverPort);
 		if (!isServer(address, port)) {
 			System.out.println("Command from non-server");
 			return;
@@ -84,7 +86,6 @@ public class MainClient extends MainNetwork {
 	private void startTrafficLight() {
 		//TODO - Acender a luz inicial
 	}
-
 
 	private void upadateTrafficLight(TrafficLightStates state) {
 		//TODO - Trocar a cor
