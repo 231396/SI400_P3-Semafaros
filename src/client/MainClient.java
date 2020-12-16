@@ -2,43 +2,39 @@ package client;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+import network_util.*;
 import server.CommandsServer;
 import util.*;
 
-public class MainClient {
+public class MainClient extends MainNetwork {
 
-    private DatagramSocket socket;    
-    boolean running;    
-    
     private InetAddress serverAddress;
     private int serverPort;
     
-	private PacketReader pr = new PacketReader();
-	private PacketWriter pw = new PacketWriter();	
-	    
 	public static void main(String[] args) {
 		try {
-			MainClient mainClient = new MainClient(InetAddress.getByName("localhost"), 7777);
-			mainClient.sendPacket(CommandsClient.startRequest);
+			InetAddress server_ip = InetAddress.getByName(args[0]);
+			int server_port = Integer.parseInt(args[1]);
 			
+			MainClient mainClient = new MainClient(server_ip, server_port);
+			mainClient.sendPacket(CommandsClient.startRequest);
+			mainClient.startListening();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}
 
 	public MainClient(InetAddress serverAddress, int serverPort) throws SocketException {
-        socket = new DatagramSocket();
+		super();
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
-        pw.setBuffer();
     }	
 	
 	public boolean isServer(InetAddress address, int port) {
-		return this.serverAddress == address && this.serverPort == port;
+		return this.serverAddress.equals(address) && this.serverPort == port;
 	}
 
     public void sendPacket(CommandsClient cc) throws IOException {
@@ -46,46 +42,22 @@ public class MainClient {
     	pw.write(cc.toString());
     	byte[] sendData = pw.toArray();
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
-		socket.send(sendPacket);
+        nt.getSocket().send(sendPacket);
     }
     
-	public void listen() {
-		running = true;		
-		byte[] buffer = new byte[pw.length()];
-		
-		while (running) {
-			try {
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-				
-				System.out.println(String.format("Waiting Data on port %d...", socket.getLocalPort()));
-				socket.receive(packet);
-				
-				pr.setBuffer(packet.getData());				
-				String received = pr.readString();
-
-				System.out.println("Recieved Data: " + received);
-				
-				try {					
-					CommandsServer cs = CommandsServer.valueOf(received);
-					Receive(cs, packet.getAddress(), packet.getPort());
-				} catch (Exception e) {					
-					System.out.println("Unknown command: " + received);
-				}
-				
-			} 
-			catch (IOException e) {
-				System.out.println("Error on data reading!");
-				e.printStackTrace();
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+    @Override
+	public void listen(DatagramPacket packet, String received) {
+		try {					
+			CommandsServer cs = CommandsServer.valueOf(received);
+			receive(cs, packet.getAddress(), packet.getPort());
+		} catch (Exception e) {					
+			System.out.println("Unknown command: " + received);
 		}
-		
-		socket.close();
 	}
 	
-	private void Receive(CommandsServer cs, InetAddress address, int port) throws IOException {
+	private void receive(CommandsServer cs, InetAddress address, int port) throws IOException {		
+		//System.out.println(address + " : " + serverAddress);
+		//System.out.println(port+ " : " + serverPort);
 		if (!isServer(address, port)) {
 			System.out.println("Command from non-server");
 			return;
@@ -94,6 +66,7 @@ public class MainClient {
 		switch (cs) {
 			case startResponse:
 				startTrafficLight();
+				System.out.println("RECEBI DO SERVER");
 			break;
 			case setLightGreen:
 				upadateTrafficLight(TrafficLightStates.GREEN);
@@ -113,7 +86,6 @@ public class MainClient {
 	private void startTrafficLight() {
 		//TODO - Acender a luz inicial
 	}
-
 
 	private void upadateTrafficLight(TrafficLightStates state) {
 		//TODO - Trocar a cor
