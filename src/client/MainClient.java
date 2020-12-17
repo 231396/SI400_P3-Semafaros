@@ -25,7 +25,7 @@ public class MainClient extends MainNetwork {
 			mainClient.sendPacket(CommandsClient.startRequest);
 			mainClient.startListening();
 			
-			
+			exit();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -42,6 +42,7 @@ public class MainClient extends MainNetwork {
 		@Override
 		public void onTimeout() {
 			System.out.println("Timeout on sending command");
+			System.exit(1);
 		}
 	};
 	
