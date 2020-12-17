@@ -5,10 +5,11 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-import network_util.*;
-import server.CommandsServer;
-import util.*;
+import network_util.MainNetwork;
+import network_util.Timeout;
 import network_util.Timeout.OnTaskTimeout;
+import server.CommandsServer;
+import util.TrafficLightStates;
 
 public class MainClient extends MainNetwork {
 

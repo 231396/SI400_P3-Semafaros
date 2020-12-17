@@ -2,7 +2,6 @@ package util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -47,28 +46,43 @@ public class MenuBar {
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction( "..\\src\\resources\\Help.txt" );
+				TxtOpennerAction("..\\src\\resources\\Help.txt");
 			}
 		});
 	}
 
 	static void QuitAction() {
-		
+
 		System.exit(0);
-		
-		
-		
-		
+
 	}
 
 	static void TxtOpennerAction(String str) {
-
+		
 		try {
-			java.awt.Desktop.getDesktop().open(new File(str));
+			Runtime.getRuntime().exec(String.format("notepad '%s' ", str));
 		} catch (IOException e) {
-
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
+		
+//		
+//		try {
+//			// constructor of file class having file as argument
+//			File file = new File("path");
+//			if (!Desktop.isDesktopSupported())// check if Desktop is supported by Platform or not
+//			{
+//				System.out.println("not supported");
+//				return;
+//			}
+//			Desktop desktop = Desktop.getDesktop();
+//			if (file.exists()) // checks file exists or not
+//				desktop.open(file); // opens the specified file
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+	}
 }
