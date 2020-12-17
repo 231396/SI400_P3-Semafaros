@@ -19,8 +19,10 @@ public class JClient extends JPanel {
 	
 	TrafficLightStates currentState;
 	
-	public JClient(TrafficLight tl, int circleRadius, int circleSpace, TrafficLightStates firstState) {
+	public JClient(TrafficLight tl, int circleSize, int offset, TrafficLightStates firstState) {
 		setLayout(null);
+		setSize(280, circleSize);
+		
 		currentState = firstState;
 		
 		client = tl;
@@ -31,19 +33,24 @@ public class JClient extends JPanel {
 		};
 		
 		int x = 0;
-		circles[0].setBounds(x, 0, circleRadius);
-		x += circleRadius + circleSpace;
-		circles[1].setBounds(x, 0, circleRadius);
-		x += circleRadius + circleSpace;
-		circles[2].setBounds(x, 0, circleRadius);
+		circles[0].setBounds(x, 0, circleSize);
+		x += circleSize + offset;
+		circles[1].setBounds(x, 0, circleSize);
+		x += circleSize + offset;
+		circles[2].setBounds(x, 0, circleSize);
 		
 		JLabel labelAddress = new JLabel(tl.getAddress().toString()); 
 		JLabel labelPort = new JLabel(String.valueOf(tl.getPort())); 
 		
+		x += circleSize + offset;
+		labelAddress.setBounds(x, -circleSize, 100, 100);
+		labelPort.setBounds(x, -circleSize/2, 100, 100);
+		
+		add(labelAddress);
+		add(labelPort);
+		
     	for (JCircle c : circles)
     		add(c);
-    	add(labelAddress);
-    	add(labelPort);
 	}	
 	
 	public void changeState(TrafficLightStates state) {
