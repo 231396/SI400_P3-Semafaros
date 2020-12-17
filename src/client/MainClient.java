@@ -25,7 +25,6 @@ public class MainClient extends MainNetwork {
 			mainClient.sendPacket(CommandsClient.startRequest);
 			mainClient.startListening();
 			
-			exit();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
