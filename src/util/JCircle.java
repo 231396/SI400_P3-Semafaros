@@ -34,6 +34,7 @@ public class JCircle extends JPanel {
 	
 	public void changeState(boolean enable) {
 		this.enable = enable;
+		repaint();
 	}
 	
 }

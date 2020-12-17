@@ -25,6 +25,13 @@ public class TrafficLight {
 	public TrafficLightStates getState() {
 		return state;
 	}
+	
+	public TrafficLightStates nextState() {
+		//System.out.println("Estado anterior : "+ state.ordinal());
+		this.state = state.next();
+		//System.out.println("Estado proximo : "+ state.ordinal());
+		return this.state;
+	}
 
 	public void setState(TrafficLightStates state) {
 		this.state = state;

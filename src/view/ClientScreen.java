@@ -8,68 +8,72 @@ import javax.swing.JPanel;
 
 import util.JCircle;
 import util.MenuBar;
+import util.TrafficLightStates;
 
 public class ClientScreen extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel contentPane;
-	
-	public static void main(String[] args) {		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ClientScreen frame = new ClientScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
+	private TrafficLightStates currentState;
+
+	private JCircle[] circles;
 
 	public ClientScreen() {
 		Color background = Color.darkGray;
-		
+
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
-		
+
 		MenuBar.CreateMenuBar(this);
-		
+
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setBackground(background);
 		contentPane.setLayout(null);
-		
-		int circleSize = 150;		
+
+		int circleSize = 150;
 		int offset = 30;
-		
+
 		int borderX = getInsets().left + getInsets().right;
 		int borderY = getInsets().top + getInsets().bottom;
-		
-		setSize(circleSize * 3 + offset * 4 + borderX, (int)(circleSize * 1.5f) + borderY);
-		
-		JCircle circleGreen = new JCircle(Color.green);
-		JCircle circleYellow = new JCircle(Color.yellow);
-		JCircle circleRed = new JCircle(Color.red);
-		
-		circleGreen.setBackground(background);
-		circleYellow.setBackground(background);
-		circleRed.setBackground(background);
-		
+
+		setSize(circleSize * 3 + offset * 4 + borderX, (int) (circleSize * 1.5f) + borderY);
+
+		circles = new JCircle[] { new JCircle(Color.green), new JCircle(Color.yellow), new JCircle(Color.red) };
+
 		int x = 0;
-		int y = (getBounds().height-borderY) / 2 - circleSize / 2;
-		
+		int y = (getBounds().height - borderY) / 2 - circleSize / 2;
+
 		x += offset;
-		circleGreen.setBounds(x, y, circleSize);
+		circles[0].setBounds(x, y, circleSize);
 		x += circleSize + offset;
-		circleYellow.setBounds(x, y, circleSize);
+		circles[1].setBounds(x, y, circleSize);
 		x += circleSize + offset;
-		circleRed.setBounds(x, y, circleSize);
-		
-		contentPane.add(circleGreen);
-		contentPane.add(circleYellow);
-		contentPane.add(circleRed);
+		circles[2].setBounds(x, y, circleSize);
+
+		for (JCircle c : circles) {
+			c.setBackground(background);
+			contentPane.add(c);
+		}
+
 	}
+
+	public void startTrafficLight() {
+		currentState = TrafficLightStates.GREEN;
+		getJCircle(currentState).changeState(true);
+	}
+
+	public void changeState(TrafficLightStates state) {
+		getJCircle(currentState).changeState(false);
+		getJCircle(state).changeState(true);
+		currentState = state;
+	}
+
+	private JCircle getJCircle(TrafficLightStates state) {
+		return circles[state.ordinal()];
+	}
+
 }

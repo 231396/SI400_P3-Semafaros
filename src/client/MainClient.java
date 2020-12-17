@@ -8,6 +8,7 @@ import java.net.SocketException;
 import network_util.*;
 import server.CommandsServer;
 import util.*;
+import view.ClientScreen;
 import network_util.Timeout.OnTaskTimeout;
 
 public class MainClient extends MainNetwork {
@@ -15,6 +16,7 @@ public class MainClient extends MainNetwork {
     private InetAddress serverAddress;
     private int serverPort;
     private Timeout timeout;
+    private ClientScreen clientScreen;
     
 	public static void main(String[] args) {
 		try {
@@ -24,6 +26,7 @@ public class MainClient extends MainNetwork {
 			MainClient mainClient = new MainClient(server_ip, server_port);
 			mainClient.sendPacket(CommandsClient.startRequest);
 			mainClient.startListening();
+			
 			
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -35,6 +38,9 @@ public class MainClient extends MainNetwork {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
 		this.timeout = new Timeout(onTaskTimeout,5000);
+		
+		clientScreen = new ClientScreen();
+		clientScreen.setVisible(true);
     }	
 	
 	private OnTaskTimeout onTaskTimeout = new OnTaskTimeout() {
@@ -76,12 +82,12 @@ public class MainClient extends MainNetwork {
 			return;
 		}
 		
-		timeout.stopTimeout();
 		
 		switch (cs) {
 			case startResponse:
+				timeout.stopTimeout();
 				startTrafficLight();
-				System.out.println("RECEBI DO SERVER");
+				System.out.println("Connected to the server");
 			break;
 			case setLightGreen:
 				upadateTrafficLight(TrafficLightStates.GREEN);
@@ -99,14 +105,19 @@ public class MainClient extends MainNetwork {
 	}
 
 	private void startTrafficLight() {
-		//TODO - Acender a luz inicial
+		//Acender a luz inicial
+		clientScreen.startTrafficLight();
 	}
 
 	private void upadateTrafficLight(TrafficLightStates state) {
 		//TODO - Trocar a cor
+		//System.out.println("Trocando a cor do semaforo para: "+state.toString());
+		clientScreen.changeState(state);
 	}
 	
 	private void onServerExit() {
-		//TODO - Desligar cliente
+		//Desligar cliente
+		System.out.println("Server has closed, the program will finish!");
+		System.exit(0);	
 	}
 }
