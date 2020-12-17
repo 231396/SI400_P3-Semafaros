@@ -1,27 +1,26 @@
-package view;
+package util;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import util.JCircle;
-import util.TrafficLight;
-import util.TrafficLightStates;
 
 public class JClient extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	public TrafficLight client;
+	private TrafficLight client;
 	
 	private JCircle[] circles;
 	
 	TrafficLightStates currentState;
 	
+	int preferredHeight;
+	
 	public JClient(TrafficLight tl, int circleSize, int offset, TrafficLightStates firstState) {
 		setLayout(null);
-		setSize(280, circleSize);
+		preferredHeight = circleSize;
 		
 		currentState = firstState;
 		
@@ -63,4 +62,13 @@ public class JClient extends JPanel {
 		return circles[state.ordinal()];
 	}
 	
+	@Override
+	public Dimension preferredSize() {
+		return new Dimension(280, preferredHeight);
+	}
+	
+	
+	public TrafficLight getTrafficLight() {
+		return client;
+	}
 }

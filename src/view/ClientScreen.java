@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,7 +21,7 @@ public class ClientScreen extends JFrame {
 
 	public ClientScreen() {
 		Color background = Color.darkGray;
-
+	
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
