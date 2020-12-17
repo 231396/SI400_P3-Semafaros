@@ -8,11 +8,13 @@ import java.net.SocketException;
 import network_util.*;
 import server.CommandsServer;
 import util.*;
+import network_util.Timeout.OnTaskTimeout;
 
 public class MainClient extends MainNetwork {
 
     private InetAddress serverAddress;
     private int serverPort;
+    private Timeout timeout;
     
 	public static void main(String[] args) {
 		try {
@@ -22,6 +24,7 @@ public class MainClient extends MainNetwork {
 			MainClient mainClient = new MainClient(server_ip, server_port);
 			mainClient.sendPacket(CommandsClient.startRequest);
 			mainClient.startListening();
+			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -31,7 +34,16 @@ public class MainClient extends MainNetwork {
 		super();
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
+		this.timeout = new Timeout(onTaskTimeout,5000);
     }	
+	
+	private OnTaskTimeout onTaskTimeout = new OnTaskTimeout() {
+		@Override
+		public void onTimeout() {
+			System.out.println("Timeout on sending command");
+			System.exit(1);
+		}
+	};
 	
 	public boolean isServer(InetAddress address, int port) {
 		return this.serverAddress.equals(address) && this.serverPort == port;
@@ -43,6 +55,7 @@ public class MainClient extends MainNetwork {
     	byte[] sendData = pw.toArray();
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
         nt.getSocket().send(sendPacket);
+        timeout.startTimeout();
     }
     
     @Override
@@ -62,6 +75,8 @@ public class MainClient extends MainNetwork {
 			System.out.println("Command from non-server");
 			return;
 		}
+		
+		timeout.stopTimeout();
 		
 		switch (cs) {
 			case startResponse:
