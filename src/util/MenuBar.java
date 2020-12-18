@@ -1,8 +1,9 @@
 package util;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -36,17 +37,17 @@ public class MenuBar {
 
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("..\\src\\resources\\Credits.txt");
+				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Credits.txt");
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("..\\src\\resources\\Disclaimer.txt");
+				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Disclaimer.txt");
 			}
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("..\\src\\resources\\Help.txt");
+				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Help.txt");
 			}
 		});
 	}
@@ -58,31 +59,21 @@ public class MenuBar {
 	}
 
 	static void TxtOpennerAction(String str) {
-		
+
 		try {
-			Runtime.getRuntime().exec(String.format("notepad '%s' ", str));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// constructor of file class having file as argument
+			File file = new File(str);
+			if (!Desktop.isDesktopSupported())// check if Desktop is supported by Platform or not
+			{
+				System.out.println("not supported");
+				return;
+			}
+			Desktop desktop = Desktop.getDesktop();
+			if (file.exists()) // checks file exists or not
+				desktop.open(file); // opens the specified file
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		
-//		
-//		try {
-//			// constructor of file class having file as argument
-//			File file = new File("path");
-//			if (!Desktop.isDesktopSupported())// check if Desktop is supported by Platform or not
-//			{
-//				System.out.println("not supported");
-//				return;
-//			}
-//			Desktop desktop = Desktop.getDesktop();
-//			if (file.exists()) // checks file exists or not
-//				desktop.open(file); // opens the specified file
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
 	}
 }
