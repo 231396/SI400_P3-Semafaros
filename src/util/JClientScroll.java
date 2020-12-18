@@ -24,17 +24,6 @@ public class JClientScroll extends JScrollPane {
 		
 		setBounds(10, 10, 315, 400);
 		setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);		
-		
-//		try {
-//			JClient[] tls = new JClient[10];
-//			for (int i = 0; i < tls.length; i++) {
-//				TrafficLight tl = new TrafficLight(InetAddress.getByName("localhost"), 1000 + i);
-//				tls[i] = addClient(tl, TrafficLightStates.GREEN);
-//			}
-//			removeClient(tls[0].getTrafficLight());
-//		} catch (UnknownHostException e) {
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void updateClient(TrafficLight tl, TrafficLightStates tls) {
@@ -46,6 +35,7 @@ public class JClientScroll extends JScrollPane {
 		JClient jc = new JClient(tl, 40, 15, initialColor);
 		clients.add(jc);
 		jp.add(jc);
+		revalidate();
 		return jc;
 	}
 	
@@ -53,6 +43,7 @@ public class JClientScroll extends JScrollPane {
 		JClient jc = getJClient(tl);		
 		clients.remove(jc);
 		jp.remove(jc);
+		revalidate();
 	}
 	
 	public JClient getJClient(TrafficLight tl) {

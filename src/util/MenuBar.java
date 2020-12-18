@@ -37,17 +37,17 @@ public class MenuBar {
 
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Credits.txt");
+				TxtOpennerAction("src/resources/Credits.txt");
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Disclaimer.txt");
+				TxtOpennerAction("src/resources/Disclaimer.txt");
 			}
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("SI400_P3-Semafaros\\src\\resources\\Help.txt");
+				TxtOpennerAction("src/resources/Help.txt");
 			}
 		});
 	}
@@ -58,11 +58,12 @@ public class MenuBar {
 
 	}
 
-	static void TxtOpennerAction(String str) {
+	static void TxtOpennerAction(String path) {
 
 		try {
 			// constructor of file class having file as argument
-			File file = new File(str);
+			File file = new File(path);
+
 			if (!Desktop.isDesktopSupported())// check if Desktop is supported by Platform or not
 			{
 				System.out.println("not supported");

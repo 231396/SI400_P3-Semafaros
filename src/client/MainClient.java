@@ -87,7 +87,7 @@ public class MainClient extends MainNetwork {
 		switch (cs) {
 			case startResponse:
 				timeout.stopTimeout();
-				startTrafficLight();
+				clientScreen.setTitle("Connected: " + serverAddress + ":" + serverPort + " on Port: " + nt.getSocket().getLocalPort());
 				System.out.println("Connected to the server");
 			break;
 			case setLightGreen:
@@ -105,19 +105,11 @@ public class MainClient extends MainNetwork {
 		}
 	}
 
-	private void startTrafficLight() {
-		//Acender a luz inicial
-		clientScreen.startTrafficLight();
-	}
-
 	private void upadateTrafficLight(TrafficLightStates state) {
-		//TODO - Trocar a cor
-		//System.out.println("Trocando a cor do semaforo para: "+state.toString());
 		clientScreen.changeState(state);
 	}
 	
 	private void onServerExit() {
-		//Desligar cliente
 		System.out.println("Server has closed, the program will finish!");
 		System.exit(0);	
 	}

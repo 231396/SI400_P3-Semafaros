@@ -1,6 +1,7 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,24 +16,12 @@ public class ServerScreen extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ServerScreen frame = new ServerScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	private JPanel contentPane;
 
 	StringBuilder sb = new StringBuilder();
 	JTextArea logArea;	
 	JScrollPane scrollPaneLog;
+	JClientScroll clientScrolls;
 	
 	public ServerScreen() {
 		setResizable(false);
@@ -51,9 +40,15 @@ public class ServerScreen extends JFrame {
 		scrollPaneLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);		
 		contentPane.add(scrollPaneLog);	
 		
-		JClientScroll jcs = new JClientScroll();
-		jcs.setBounds(10, 10, 303, 400);
-		contentPane.add(jcs);	
+		clientScrolls = new JClientScroll();
+		clientScrolls.setBounds(10, 10, 303, 400);
+		contentPane.add(clientScrolls);	
+		
+		addWindowListener(new WindowAdapter(){
+	        public void windowClosing(WindowEvent e){
+	        	
+	        }
+	    });
 	}
 		
 	public void print(String str) {
@@ -64,6 +59,12 @@ public class ServerScreen extends JFrame {
 	public void println(String str) {
 		print(str + '\n');
 	}
+	
+	public JClientScroll getJClientScroll() {
+		return clientScrolls;
+	}	
+	
+
 	
 }
 

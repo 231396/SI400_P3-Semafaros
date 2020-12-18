@@ -21,9 +21,7 @@ public class JClient extends JPanel {
 	public JClient(TrafficLight tl, int circleSize, int offset, TrafficLightStates firstState) {
 		setLayout(null);
 		preferredHeight = circleSize;
-		
-		currentState = firstState;
-		
+				
 		client = tl;
 		circles = new JCircle[] { 
 				new JCircle(Color.green), 
@@ -50,7 +48,11 @@ public class JClient extends JPanel {
 		
     	for (JCircle c : circles)
     		add(c);
+
+    	currentState = firstState;
+		getJCircle(currentState).changeState(true);	
 	}	
+	
 	
 	public void changeState(TrafficLightStates state) {
 		getJCircle(currentState).changeState(false);

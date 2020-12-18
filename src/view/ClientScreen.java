@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -57,16 +59,17 @@ public class ClientScreen extends JFrame {
 			c.setBackground(background);
 			contentPane.add(c);
 		}
-
-	}
-
-	public void startTrafficLight() {
-		currentState = TrafficLightStates.GREEN;
-		getJCircle(currentState).changeState(true);
+		
+		addWindowListener(new WindowAdapter(){
+	        public void windowClosing(WindowEvent e){
+	        	
+	        }
+	    });
 	}
 
 	public void changeState(TrafficLightStates state) {
-		getJCircle(currentState).changeState(false);
+		if (currentState != null)
+			getJCircle(currentState).changeState(false);
 		getJCircle(state).changeState(true);
 		currentState = state;
 	}
@@ -74,5 +77,5 @@ public class ClientScreen extends JFrame {
 	private JCircle getJCircle(TrafficLightStates state) {
 		return circles[state.ordinal()];
 	}
-
+	
 }
