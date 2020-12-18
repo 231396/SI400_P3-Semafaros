@@ -10,6 +10,7 @@ import java.util.TimerTask;
 
 import client.CommandsClient;
 import network_util.MainNetwork;
+import util.OnClose;
 import util.TrafficLight;
 import util.TrafficLightStates;
 import view.ServerScreen;
@@ -48,7 +49,17 @@ public class MainServer extends MainNetwork {
 		super(port);
 		serverScreen = new ServerScreen();
 		serverScreen.setTitle("Server: " + port);
+		serverScreen.setCloseEvent(new OnClose() {
+			public void onCloseTrigger() {
+				onCloseEvent();
+			}
+		});
 	}
+	
+	public void onCloseEvent(){
+		stop();
+    	System.exit(0);
+	}	
 
 	@Override
 	public void listen(DatagramPacket packet, String received) {
@@ -57,6 +68,7 @@ public class MainServer extends MainNetwork {
 			Receive(cc, packet.getAddress(), packet.getPort());
 		} catch (Exception e) {
 			System.out.println("Unknown commands: " + received);
+			e.printStackTrace();
 		}
 	}
 
@@ -104,6 +116,7 @@ public class MainServer extends MainNetwork {
 	}
 
 	public void sendSingle(CommandsServer cs, TrafficLight tl) throws IOException {
+//		System.out.println(tl);
 		byte[] sendData = serverSends(cs);
 		send(sendData, tl);
 	}
@@ -131,13 +144,13 @@ public class MainServer extends MainNetwork {
 			sendSingle(CommandsServer.startResponse, client);
 			CommandsServer cs = CommandsServer.setLightGreen;			
 			serverScreen.getJClientScroll().addClient(client, cs.getLightFromCommand());
-			serverScreen.revalidate();
 			sendSingle(cs, client);
 			break;
 		case exit:
 			client = getClient(address, port);
 			clients.remove(client);
 			serverScreen.getJClientScroll().removeClient(client);
+			System.out.println(clients.size());
 			break;
 		}
 	}

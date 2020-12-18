@@ -11,6 +11,7 @@ import javax.swing.ScrollPaneConstants;
 
 import util.JClientScroll;
 import util.MenuBar;
+import util.OnClose;
 
 public class ServerScreen extends JFrame {
 
@@ -64,7 +65,12 @@ public class ServerScreen extends JFrame {
 		return clientScrolls;
 	}	
 	
-
-	
+	public void setCloseEvent(OnClose onClose) {
+		addWindowListener(new WindowAdapter(){
+	        public void windowClosing(WindowEvent e){
+	        	onClose.onCloseTrigger();
+	        }
+	    });
+	}	
 }
 

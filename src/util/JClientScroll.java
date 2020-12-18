@@ -39,11 +39,11 @@ public class JClientScroll extends JScrollPane {
 		return jc;
 	}
 	
-	public void removeClient(TrafficLight tl) {
+	public boolean removeClient(TrafficLight tl) {
 		JClient jc = getJClient(tl);		
-		clients.remove(jc);
 		jp.remove(jc);
 		revalidate();
+		return clients.remove(jc);
 	}
 	
 	public JClient getJClient(TrafficLight tl) {

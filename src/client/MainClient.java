@@ -9,6 +9,7 @@ import network_util.MainNetwork;
 import network_util.Timeout;
 import network_util.Timeout.OnTaskTimeout;
 import server.CommandsServer;
+import util.OnClose;
 import util.TrafficLightStates;
 import view.ClientScreen;
 
@@ -42,7 +43,22 @@ public class MainClient extends MainNetwork {
 		
 		clientScreen = new ClientScreen();
 		clientScreen.setVisible(true);
+		clientScreen.setCloseEvent(new OnClose() {
+			public void onCloseTrigger()
+			{
+				onCloseEvent();
+			}
+		});
     }	
+	
+	public void onCloseEvent(){
+		try {
+			sendPacket(CommandsClient.exit);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	System.exit(0);
+	}
 	
 	private OnTaskTimeout onTaskTimeout = new OnTaskTimeout() {
 		@Override

@@ -7,9 +7,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import util.JCircle;
-import util.MenuBar;
-import util.TrafficLightStates;
+import util.*;
 
 public class ClientScreen extends JFrame {
 
@@ -59,12 +57,6 @@ public class ClientScreen extends JFrame {
 			c.setBackground(background);
 			contentPane.add(c);
 		}
-		
-		addWindowListener(new WindowAdapter(){
-	        public void windowClosing(WindowEvent e){
-	        	
-	        }
-	    });
 	}
 
 	public void changeState(TrafficLightStates state) {
@@ -76,6 +68,14 @@ public class ClientScreen extends JFrame {
 
 	private JCircle getJCircle(TrafficLightStates state) {
 		return circles[state.ordinal()];
+	}
+
+	public void setCloseEvent(OnClose onClose) {
+		addWindowListener(new WindowAdapter(){
+	        public void windowClosing(WindowEvent e){
+	        	onClose.onCloseTrigger();
+	        }
+	    });
 	}
 	
 }
