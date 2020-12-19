@@ -1,14 +1,18 @@
 package util;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import view.HelpView;
 
 public class MenuBar {
 
@@ -60,21 +64,29 @@ public class MenuBar {
 
 	static void TxtOpennerAction(String path) {
 
+		File file = new File(path);
+		FileInputStream fis;
 		try {
-			// constructor of file class having file as argument
-			File file = new File(path);
-
-			if (!Desktop.isDesktopSupported())// check if Desktop is supported by Platform or not
-			{
-				System.out.println("not supported");
-				return;
-			}
-			Desktop desktop = Desktop.getDesktop();
-			if (file.exists()) // checks file exists or not
-				desktop.open(file); // opens the specified file
-		} catch (Exception e) {
+			
+			fis = new FileInputStream(file);
+			byte[] data = new byte[(int) file.length()];
+			fis.read(data);
+			fis.close();
+ 
+			String str = new String(data, "ISO-8859-1");
+			
+			HelpView help = new HelpView();
+			help.setVisible(true);
+			help.setText(str);
+			
+		} catch (IOException e) {
+			
 			e.printStackTrace();
+			
 		}
+
+
+
 
 	}
 }

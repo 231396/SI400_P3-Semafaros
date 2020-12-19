@@ -1,6 +1,4 @@
 Este projeto consiste no desenvolvimento de um programa distribuído para controle de uma rede simulada de semáforos.
-
 O programa possui interface gráfica construída a partir dos componentes Swing, que consista em dois módulos diferentes: um servidor e um cliente.
 O servidor deve coordena e comandar os semáforos (usando um controle temporizado), deve permitir que o usuário possa acompanhar online quantos são os semáforos ativos e quais os estados comandados; ao desligar o servidor, todos os semáforos devem ser encerrados
-
 O cliente é basicamente um semáforo com as luzes convencionais e deve, ao iniciar, enviar uma mensagem de registro ao servidor; a partir daí, deve receber os comandos de estado (qual luz deve ser acessa) e apresentar a respectiva representação gráfica. Se um semáforo (módulo cliente) for desligado, ele deve comunicar esta ação ao servidor, para que este último pare de enviar comandos a ele. Pode haver um número arbitrário de clientes ativos da rede.

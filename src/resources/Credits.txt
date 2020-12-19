@@ -1,6 +1,5 @@
 Projeto produzido como parte SI400A.
 Grupo A7.
-
 André Sacilotto	231396
 Lucas Samuel Lopes	240147
 Vitor Prado De Lima	225659
