@@ -12,8 +12,10 @@ public class NetworkListener extends Thread implements Closeable {
 		public void onReceive(DatagramPacket packet);
 	}
 
+	public final static int BUFFER_SIZE = 256;
+	
 	private onNetworkReceived packetReceived;
-	private byte[] buff = new byte[PacketWriter.BUFFER_SIZE];
+	private byte[] buff = new byte[BUFFER_SIZE];
 	private DatagramSocket socket;
 	private boolean running;
 

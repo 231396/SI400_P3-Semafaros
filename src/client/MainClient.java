@@ -73,27 +73,23 @@ public class MainClient extends MainNetwork {
 	}
 
     public void sendPacket(CommandsClient cc) throws IOException {
-    	pw.clear();
-    	pw.write(cc.toString());
-    	byte[] sendData = pw.toArray();
+    	byte[] sendData = serialize(cc);
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
         nt.getSocket().send(sendPacket);
         timeout.startTimeout();
     }
     
     @Override
-	public void listen(DatagramPacket packet, String received) {
+	public void listen(DatagramPacket packet) {
 		try {					
-			CommandsServer cs = CommandsServer.valueOf(received);
+			CommandsServer cs = (CommandsServer) deserialize(packet);
 			receive(cs, packet.getAddress(), packet.getPort());
 		} catch (Exception e) {					
-			System.out.println("Unknown command: " + received);
+			System.out.println("Unknown command");
 		}
 	}
 	
 	private void receive(CommandsServer cs, InetAddress address, int port) throws IOException {		
-		//System.out.println(address + " : " + serverAddress);
-		//System.out.println(port+ " : " + serverPort);
 		if (!isServer(address, port)) {
 			System.out.println("Command from non-server");
 			return;

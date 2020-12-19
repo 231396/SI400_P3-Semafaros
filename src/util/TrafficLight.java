@@ -37,8 +37,13 @@ public class TrafficLight {
 		this.state = state;
 	}
 
-	public boolean sameAdress(InetAddress address, int port) {
-		return this.address == address && this.port == port;
+	public boolean sameAddress(InetAddress address, int port) {
+		return this.address.equals(address) && this.port == port;
 	}	
+	
+	@Override
+	public String toString() {
+		return address + ":" + port;
+	}
 
 }

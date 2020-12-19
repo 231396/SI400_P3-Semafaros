@@ -11,7 +11,7 @@ public class JClientScroll extends JScrollPane {
 
 	private static final long serialVersionUID = 1L;
 	
-	ArrayList<JClient> clients = new ArrayList<>();
+	public ArrayList<JClient> clients = new ArrayList<>();
 	JPanel jp;
 	
 	public JClientScroll() {		
@@ -43,6 +43,7 @@ public class JClientScroll extends JScrollPane {
 		JClient jc = getJClient(tl);		
 		jp.remove(jc);
 		revalidate();
+		repaint();
 		return clients.remove(jc);
 	}
 	

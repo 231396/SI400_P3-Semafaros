@@ -27,17 +27,17 @@ public class ServerScreen extends JFrame {
 	public ServerScreen() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 560, 480);
+		setBounds(0, 0, 640, 470);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		MenuBar.CreateMenuBar(this);		
 		
-		logArea = new JTextArea("Server");
+		logArea = new JTextArea("");
 		logArea.setLineWrap(true);		
 		scrollPaneLog = new JScrollPane(logArea);
-		scrollPaneLog.setBounds(337,11,200,400);
+		scrollPaneLog.setBounds(337,11,280,400);
 		scrollPaneLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);		
 		contentPane.add(scrollPaneLog);	
 		
@@ -45,20 +45,16 @@ public class ServerScreen extends JFrame {
 		clientScrolls.setBounds(10, 10, 303, 400);
 		contentPane.add(clientScrolls);	
 		
-		addWindowListener(new WindowAdapter(){
-	        public void windowClosing(WindowEvent e){
-	        	
-	        }
-	    });
 	}
 		
-	public void print(String str) {
+	public void log(String str) {
 		sb.append(str);
-		logArea.setText(sb.toString());
+		logArea.setText(sb.toString());		
+		logArea.setCaretPosition(logArea.getDocument().getLength());
 	}
 	
-	public void println(String str) {
-		print(str + '\n');
+	public void logln(String str) {
+		log(str + '\n');
 	}
 	
 	public JClientScroll getJClientScroll() {
