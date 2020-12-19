@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -12,7 +11,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import view.HelpView;
+import view.DocumentScreen;
 
 public class MenuBar {
 
@@ -35,58 +34,45 @@ public class MenuBar {
 
 		mntmQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				QuitAction();
+				quitAction();
 			}
 		});
 
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("src/resources/Credits.txt");
+				documentOpennerAction("src/resources/Credits.txt");
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("src/resources/Disclaimer.txt");
+				documentOpennerAction("src/resources/Disclaimer.txt");
 			}
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TxtOpennerAction("src/resources/Help.txt");
+				documentOpennerAction("src/resources/Help.txt");
 			}
 		});
 	}
 
-	static void QuitAction() {
-
+	static void quitAction() {
 		System.exit(0);
-
 	}
 
-	static void TxtOpennerAction(String path) {
-
+	static void documentOpennerAction(String path) {
 		File file = new File(path);
 		FileInputStream fis;
 		try {
-			
 			fis = new FileInputStream(file);
 			byte[] data = new byte[(int) file.length()];
 			fis.read(data);
 			fis.close();
- 
 			String str = new String(data, "ISO-8859-1");
-			
-			HelpView help = new HelpView();
-			help.setVisible(true);
-			help.setText(str);
-			
+			DocumentScreen ds = new DocumentScreen();
+			ds.setVisible(true);
+			ds.setText(str);
 		} catch (IOException e) {
-			
 			e.printStackTrace();
-			
 		}
-
-
-
-
 	}
 }

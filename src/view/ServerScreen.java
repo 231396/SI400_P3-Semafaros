@@ -27,7 +27,7 @@ public class ServerScreen extends JFrame {
 	public ServerScreen() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 640, 470);
+		setBounds(0, 0, 640, 500);
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -35,6 +35,7 @@ public class ServerScreen extends JFrame {
 		MenuBar.CreateMenuBar(this);		
 		
 		logArea = new JTextArea("");
+		logArea.setEditable(false);
 		logArea.setLineWrap(true);		
 		scrollPaneLog = new JScrollPane(logArea);
 		scrollPaneLog.setBounds(337,11,280,400);
