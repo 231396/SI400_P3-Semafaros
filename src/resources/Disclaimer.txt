@@ -1,1 +1,1 @@
-Esse é um projetod ese
+Esse é um projeto desenvolvido a partir da disciplina SI400 da unicamp, todo código presente nesse projeto tem somente a intenção educacional. Não nos comprometos a qualquer falha resultante desse projeto. 
