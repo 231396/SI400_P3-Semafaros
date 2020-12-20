@@ -2,9 +2,10 @@ package util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -40,17 +41,17 @@ public class MenuBar {
 
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction("src/resources/Credits.txt");
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Credits.txt"));
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction("src/resources/Disclaimer.txt");
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Disclaimer.txt"));
 			}
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction("src/resources/Help.txt");
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Help.txt"));
 			}
 		});
 	}
@@ -59,20 +60,20 @@ public class MenuBar {
 		System.exit(0);
 	}
 
-	static void documentOpennerAction(String path) {
-		File file = new File(path);
-		FileInputStream fis;
+	static void documentOpennerAction(InputStream stream) {
+		
 		try {
-			fis = new FileInputStream(file);
-			byte[] data = new byte[(int) file.length()];
-			fis.read(data);
-			fis.close();
-			String str = new String(data, "ISO-8859-1");
-			DocumentScreen ds = new DocumentScreen();
+			Reader reader = new InputStreamReader(stream, "ISO-8859-1");
+			char[] buffer = new char[4096];
+			int charsRead = reader.read(buffer);
+			String text = new String(buffer, 0, charsRead);			
+			DocumentScreen ds = new DocumentScreen();			
 			ds.setVisible(true);
-			ds.setText(str);
+			ds.setText(text);			
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 }
