@@ -41,17 +41,17 @@ public class MenuBar {
 
 		mntmCredits.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction(getClass().getResourceAsStream("/resources/Credits.txt"));
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Credits.txt"), "Credits");
 			}
 		});
 		mntmDisclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction(getClass().getResourceAsStream("/resources/Disclaimer.txt"));
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Disclaimer.txt"), "Disclaimer");
 			}
 		});
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				documentOpennerAction(getClass().getResourceAsStream("/resources/Help.txt"));
+				documentOpennerAction(getClass().getResourceAsStream("/resources/Help.txt"), "Help");
 			}
 		});
 	}
@@ -60,7 +60,7 @@ public class MenuBar {
 		System.exit(0);
 	}
 
-	static void documentOpennerAction(InputStream stream) {
+	static void documentOpennerAction(InputStream stream, String title) {
 		
 		try {
 			Reader reader = new InputStreamReader(stream, "ISO-8859-1");
@@ -69,7 +69,7 @@ public class MenuBar {
 			String text = new String(buffer, 0, charsRead);			
 			DocumentScreen ds = new DocumentScreen();			
 			ds.setVisible(true);
-			ds.setText(text);			
+			ds.setText(text, title);			
 			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();

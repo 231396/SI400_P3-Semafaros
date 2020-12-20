@@ -23,7 +23,7 @@ public class MainServer extends MainNetwork {
 
 	private ServerScreen serverScreen;
 
-	public final static int tickTime = 2500;
+	public final static int tickTime = 3000;
 
 	public static void main(String[] args) {
 		try {
@@ -42,7 +42,8 @@ public class MainServer extends MainNetwork {
 	public MainServer(int port) throws SocketException {
 		super(port);
 		serverScreen = new ServerScreen();
-		serverScreen.setTitle("Server: " + port);
+		serverScreen.setTitle("Server online on port " + port);
+		serverScreen.logln("Server started on port " + port);
 		serverScreen.setCloseEvent(new OnClose() {
 			public void onCloseTrigger() {
 				onCloseEvent();
