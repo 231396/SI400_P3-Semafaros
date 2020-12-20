@@ -63,7 +63,7 @@ public class MenuBar {
 	static void documentOpennerAction(InputStream stream, String title) {
 		
 		try {
-			Reader reader = new InputStreamReader(stream, "ISO-8859-1");
+			Reader reader = new InputStreamReader(stream, "UTF-8");
 			char[] buffer = new char[4096];
 			int charsRead = reader.read(buffer);
 			String text = new String(buffer, 0, charsRead);			
