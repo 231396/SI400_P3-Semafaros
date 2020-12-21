@@ -2,6 +2,7 @@ package util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,7 +36,7 @@ public class MenuBar {
 
 		mntmQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				quitAction();
+				quitAction(f);
 			}
 		});
 
@@ -56,8 +57,8 @@ public class MenuBar {
 		});
 	}
 
-	static void quitAction() {
-		System.exit(0);
+	static void quitAction(JFrame f) {
+		f.dispatchEvent(new WindowEvent(f, WindowEvent.WINDOW_CLOSING));
 	}
 
 	static void documentOpennerAction(InputStream stream, String title) {
